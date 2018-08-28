@@ -4,14 +4,13 @@ import os
 import struct
 import sys
 
-# TODO: train/test split?
 def LoadZeroOneData():
-    X = np.load("data/zero_one.npy")
-    y = np.load("data/zero_one_label.npy")
+    X = np.load("data/toy/orig/zero_one.npy")
+    y = np.load("data/toy/orig/zero_one_label.npy")
     return X, y
 
 def LoadWineData():
-    data = np.loadtxt("data/wine/wine.data", delimiter=",")
+    data = np.loadtxt("data/wine/orig/wine.data", delimiter=",")
     y = data[:, 0].astype(int) - 1
     X = data[:, 1:]
     # normalizes X
@@ -19,7 +18,7 @@ def LoadWineData():
     return X, y
 
 def LoadSegmentationData():
-    data = np.loadtxt("data/segmentation/segmentation.txt", delimiter=",", comments='#')
+    data = np.loadtxt("data/segmentation/orig/segmentation.txt", delimiter=",", comments='#')
     y = data[:, 0].astype(int)
     X = data[:, 1:]
     X = preprocessing.MinMaxScaler().fit_transform(X)

@@ -116,7 +116,7 @@ def Wine():
 
     start = time()
     print("Saving data for WINE...")
-    clfs = ["data/toy/wine_logistic_regression.pkl"]
+    clfs = ["data/wine/wine_logistic_regression.pkl"]
     with open('data/wine/wine_logistic_regression.pkl', 'wb') as f:
         pickle.dump(wine_lr, f)
 
@@ -218,13 +218,13 @@ def CNNModel2(input_shape, num_classes):
 def MNIST():
     start = time()
     print("Reading MNIST dataset...")
-    X_train, y_train = data.LoadMNISTData()
+    X_train, y_train = data.LoadMNISTData('train', 'data/mnist/orig/')
     new_idx = np.random.permutation(X_train.shape[0])
     X_train, y_train = X_train[new_idx], y_train[new_idx]
     X_train_base = np.copy(X_train)
     y_train_base = np.copy(y_train)
 
-    X_test, y_test = data.LoadMNISTData('test')
+    X_test, y_test = data.LoadMNISTData('test', 'data/mnist/orig')
     X_test_base = np.copy(X_test)
     y_test_base = np.copy(y_test)
     print("\tFinished reading dataset...", time() - start)
@@ -325,13 +325,13 @@ def MNIST():
     np.save(proj_path2,   proj_tsne)
 
     data_json = {'X_train' : train_X_path,
-            'y_train' : train_y_path,
-            'X_test'  : test_X_path,
-            'y_test'  : test_y_path,
-            'proj1'   : proj_path1,
-            'proj2'   : proj_path2,
-            'clfs'    : clfs,
-            'weights' : weights }
+                 'y_train' : train_y_path,
+                 'X_test'  : test_X_path,
+                 'y_test'  : test_y_path,
+                 'proj1'   : proj_path1,
+                 'proj2'   : proj_path2,
+                 'clfs'    : clfs,
+                 'weights' : weights }
      
     with open(path + name + ".json", 'w') as outfile:
         json.dump(data_json, outfile)
@@ -339,9 +339,9 @@ def MNIST():
     print("\tFinished saving data...", time() - start)
 
 def main():
-    #Toy()
+    Toy()
     #Wine()
-    #Segmentation()
+    Segmentation()
     MNIST()
 
 if __name__ == "__main__":

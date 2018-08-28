@@ -60,7 +60,7 @@ def main():
     weights_path = data_json['weights'][4]
     clf2_50.LoadKeras(clf_path, weights_path, "CNN 2 - 50 epochs", input_shape)
 
-     2 - Run boundary map construction function
+    # Run boundary map construction function
     R = 300
     N = [1, 5, 10, 15]
     grid1 = Grid(proj_tsne, R)

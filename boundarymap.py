@@ -189,17 +189,14 @@ class Grid:
                 new_samples = self.GenNewSamples(num_samples, X, row, col)
                 X_sub.extend(new_samples)
                 X_sub = np.array(X_sub)
-
-                #TODO: fix num_pts value
-                # numpts is used to make computation on the lines below
+                
+                # now that new data points were created, there are at least
+                # num_pts samples in this cell
                 if num_pts < num_per_cell:
                     num_pts = num_per_cell
 
-                luminance = num_pts/float(max_pts)
                 # Compute color for this cell
                 labels = clf.Predict(X_sub)
-                #labels = PredictCLF(X_sub, clf, )
-                #labels = clf.predict(X)
 
                 counts = np.bincount(labels)
                 num_winning = np.max(counts)
@@ -227,8 +224,8 @@ def PlotDenseMap(dense_map, title, filename):
     plt.title(title)
     plt.savefig(filename + ".pdf", format='pdf')
     plt.clf()
-    Image.fromarray((rgb_img*255).astype(np.uint8)).save(filename + "_arr.png")
-    plt.imsave(filename + "_plt.svg", (rgb_img*255).astype(np.uint8),format='svg')
+    #Image.fromarray((rgb_img*255).astype(np.uint8)).save(filename + "_arr.png")
+    #plt.imsave(filename + "_plt.svg", (rgb_img*255).astype(np.uint8),format='svg')
     plt.clf()
     
 def PlotLegend(path, colors, labels):

@@ -53,7 +53,7 @@ def main():
     num_samples = 5 
     _, dmap = grid.BoundaryMap(X_train, num_samples, clf)
     fig_title = "{}x{} DenseMap ({} samples, {})".format(grid.grid_size, grid.grid_size, num_samples, clf.name)
-    fig_name = "test_DenseMap_{}x{}_N_{}_dense_map_{}".format(grid.grid_size, grid.grid_size, num_samples, clf.name)
+    fig_name = "data/toy/DenseMap_{}x{}_N_{}_dense_map_{}".format(grid.grid_size, grid.grid_size, num_samples, clf.name)
     PlotDenseMap(dmap, fig_title, fig_name)
     
 
