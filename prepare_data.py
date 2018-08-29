@@ -339,9 +339,9 @@ def MNIST():
     print("\tFinished saving data...", time() - start)
 
 def main():
-    Toy()
+    #Toy()
     #Wine()
-    Segmentation()
+    #Segmentation()
     MNIST()
 
 if __name__ == "__main__":
