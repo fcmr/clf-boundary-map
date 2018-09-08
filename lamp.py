@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial import distance
 from sklearn.neighbors import KDTree
-
+#import arrayfire as af
 
 #np.random.seed(0)
 # Forced projection method as decribed in the paper "On improved projection 
@@ -124,54 +124,6 @@ def lamp2d(X, num_ctrl_pts=None, delta=10.0, ctrl_pts_idx=None):
     X_proj = (X_proj - X_proj.min(axis=0)) / (X_proj.max(axis=0) - X_proj.min(axis=0))
     return X_proj
 
-# FIXME: precompute kdtree?
-def ilamp(data, data_proj, p, k=6):
-    # 0. compute X_s and Y_s
-    tree = KDTree(data_proj)
-
-    dist, ind = tree.query([p], k=k)
-    # ind is a (1xdim) array
-    ind = ind[0]
-    X_proj = data_proj[ind]
-    X = data[ind]
-
-    # 1. compute weights alpha_i
-    alpha = np.zeros(X_proj.shape[0])
-    for i in range(X_proj.shape[0]):
-        diff = X_proj[i] - p
-        diff2 = np.dot(diff, diff)
-
-        # FIXME: in the original paper, if the point is too close to a "real"
-        # data point, the real one is returned. Keep it this way?
-        if diff2 < 1e-6:
-            # difference is too small, the counter part to p
-            # precisely X[i]
-            return X[i]
-        alpha[i] = 1.0/diff2
-
-    sum_alpha = np.sum(alpha)
-    # 2. compute x_tilde, y_tilde
-    x_tilde = np.sum(alpha[:, np.newaxis]*X, axis=0)/sum_alpha
-    y_tilde = np.sum(alpha[:, np.newaxis]*X_proj, axis=0)/sum_alpha
-
-    # 3. build matrices A and B
-    x_hat = X - x_tilde
-    y_hat = X_proj - y_tilde
-
-    alpha_sqrt = np.sqrt(alpha)
-    A = alpha_sqrt[:, np.newaxis]*y_hat
-    B = alpha_sqrt[:, np.newaxis]*x_hat
-
-    u, s, vh = np.linalg.svd(np.dot(A.T, B))
-
-    # 5. let M = UV
-    aux = np.zeros((2, X.shape[1]))
-    aux[0] = vh[0]
-    aux[1] = vh[1]
-    M = np.dot(u, aux)
-
-    return np.dot(p - y_tilde, M) + x_tilde
-
 
 def refine_lamp(X, X_proj, max_iter=50, k=8):
     tree = KDTree(X)
@@ -194,3 +146,62 @@ def refine_lamp(X, X_proj, max_iter=50, k=8):
             # move the projected point a little in direction of the center
             X_proj[i] += (center - proj_p)/10.0
 
+
+
+class ILamp():
+    def __init__(self, data, data_proj):
+        self.data = data
+        self.data_proj = data_proj
+
+        # 0. compute X_s and Y_s
+        self.tree = KDTree(self.data_proj)
+
+    def inverse_transform(self, p, k=6):
+        _, ind = self.tree.query([p], k=k)
+        # ind is a (1xdim) array
+        ind = ind[0]
+        X_proj = self.data_proj[ind]
+        X = self.data[ind]
+
+        # 1. compute weights alpha_i
+        alpha = np.zeros(X_proj.shape[0])
+        for i in range(X_proj.shape[0]):
+            diff = X_proj[i] - p
+            diff2 = np.dot(diff, diff)
+
+            # FIXME: in the original paper, if the point is too close to a "real"
+            # data point, the real one is returned. Keep it this way?
+            if diff2 < 1e-6:
+                # difference is too small, the counter part to p
+                # precisely X[i]
+                return X[i]
+            alpha[i] = 1.0/diff2
+
+        sum_alpha = np.sum(alpha)
+        # 2. compute x_tilde, y_tilde
+        x_tilde = np.sum(alpha[:, np.newaxis]*X, axis=0)/sum_alpha
+        y_tilde = np.sum(alpha[:, np.newaxis]*X_proj, axis=0)/sum_alpha
+
+        # 3. build matrices A and B
+        x_hat = X - x_tilde
+        y_hat = X_proj - y_tilde
+
+        alpha_sqrt = np.sqrt(alpha)
+        A = alpha_sqrt[:, np.newaxis]*y_hat
+        B = alpha_sqrt[:, np.newaxis]*x_hat
+
+        # D = af.np_to_af_array(np.dot(A.T, B))
+        # u_d, s_d, vt_d = af.lapack.svd(D)
+        # u = np.array(u_d.to_list(row_major=True))
+        # vh = np.array(vt_d)
+
+        D = np.dot(A.T, B)
+        u, s, vh = np.linalg.svd(D)
+
+        # 5. let M = UV
+        aux = np.zeros((2, X.shape[1]))
+        aux[0] = vh[0]
+        aux[1] = vh[1]
+        M = np.dot(u, aux)
+
+        return np.dot(p - y_tilde, M) + x_tilde

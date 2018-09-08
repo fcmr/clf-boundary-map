@@ -2,6 +2,7 @@ import numpy as np
 import pickle
 
 from utils import *
+from lamp import ILamp
 import lamp
 
 import matplotlib
@@ -9,6 +10,9 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import hsv_to_rgb
 from PIL import Image
+from sklearn.preprocessing import MinMaxScaler
+
+import classifier
 
 # check colorscheme.png for a visual explanation
 def SV(c, d):
@@ -45,6 +49,7 @@ def SV(c, d):
     return S, V
 
 
+#TODO: load new-style classifiers
 # TODO: state pattern?
 class CLF:
     def __init__(self, clf=None, clf_type="", shape=None):
@@ -95,9 +100,12 @@ class CLF:
             return self.clf.score(X, y)
 
 class Grid:
-    def __init__(self, proj, grid_size):
-        self.CMAP_ORIG = np.array([234, 0, 108, 288, 252, 72, 180, 324, 36, 144])/360.0
-        self.CMAP_SYN = np.array([216, 18, 126, 306, 270, 90, 198, 342, 54, 162])/360.0
+    def __init__(self, X_low, grid_size):
+        scaler = MinMaxScaler()
+        proj = scaler.fit_transform(X_low)
+
+        self.CMAP_ORIG = np.array([234, 0, 108, 288, 252, 72, 180, 324, 36, 144,   234, 0, 108, 288, 252, 72, 180, 324, 36, 144,    200])/360.0
+        self.CMAP_SYN = np.array([216, 18, 126, 306, 270, 90, 198, 342, 54, 162,   216, 18, 126, 306, 270, 90, 198, 342, 54, 162,   200])/360.0
 
         self.grid_size = grid_size
         # cells will store the indices of the points that fall inside each cell
@@ -109,6 +117,7 @@ class Grid:
             self.cells[i] = [[] for _ in range(grid_size)]
         
         tile_size = 1.0/grid_size
+
         # Adds point's indices to the corresponding cell
         for idx in range(len(proj)):
             p = proj[idx]
@@ -158,8 +167,12 @@ class Grid:
         sampled = SampleSquare(num_samples, limits)
         new_X = []
 
-        for (x, y) in sampled:
-            new_sample = lamp.ilamp(X, self.proj, np.array([x, y]))
+        ilamp = ILamp(X, self.proj)
+
+        for i, (x, y) in enumerate(sampled):
+#            print(i, x, y)
+
+            new_sample = ilamp.inverse_transform(np.array([x, y]))
             if rshp is True:
                 new_sample = new_sample.reshape(orig_shape)
             new_X.append(new_sample)
@@ -171,6 +184,7 @@ class Grid:
         dmap = np.zeros((self.grid_size , self.grid_size, 3))
 
         max_pts, avg_pts = self.GetMaxAvgPts(num_per_cell)
+
         for row in range(self.grid_size):
             for col in range(self.grid_size):
                 num_pts = len(self.cells[row][col])
@@ -186,6 +200,7 @@ class Grid:
                 X_sub = [x for x in X[self.cells[row][col]]]
                 # number of synthetic samples that will be created
                 num_samples = num_per_cell - num_pts
+
                 new_samples = self.GenNewSamples(num_samples, X, row, col)
                 X_sub.extend(new_samples)
                 X_sub = np.array(X_sub)
@@ -196,7 +211,7 @@ class Grid:
                     num_pts = num_per_cell
 
                 # Compute color for this cell
-                labels = clf.Predict(X_sub)
+                labels = classifier.predict(clf, X_sub)
 
                 counts = np.bincount(labels)
                 num_winning = np.max(counts)
@@ -252,7 +267,19 @@ def PlotProjection(X, y_pred, path, title, leg_path="", labels=[]):
                        [0.09, 0.657, 0.9, 0.5],
                        [0.9, 0.09, 0.333, 0.5],
                        [0.9, 0.819, 0.09, 0.5],
-                       [0.09, 0.9, 0.657, 0.5]])
+                       [0.09, 0.9, 0.657, 0.5],
+
+                       [0.05, 0.414, 0.9, 0.5],
+                       [0.5, 0.333, 0.09, 0.5],
+                       [0.05, 0.9, 0.171, 0.5],
+                       [0.5, 0.09, 0.819, 0.5],
+                       [0.995, 0.09, 0.9, 0.5],
+                       [0.995, 0.9, 0.09, 0.5],
+                       [0.05, 0.657, 0.9, 0.5],
+                       [0.5, 0.09, 0.333, 0.5],
+                       [0.5, 0.819, 0.09, 0.5],
+                       [0.05, 0.9, 0.657, 0.5],
+                       [0.05, 0.5, 0.957, 0.5]])
 
     colors = [COLORS[i] for i in y_pred]
 
