@@ -8,7 +8,7 @@ class TapkeeProjection(BaseEstimator, TransformerMixin):
         self.converter.parallel.set_num_threads(8)
 
     def fit_transform(self, X, y=None):
-        features = sg.RealFeatures(X.T)
+        features = sg.RealFeatures(X.T.astype('float64'))
         return self.converter.embed(features).get_feature_matrix().T
 
 class DiffusionMaps(TapkeeProjection):

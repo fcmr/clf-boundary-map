@@ -12,8 +12,8 @@ echo "Starting test id $test_id"
 
 [ ! -d $output_dir ] && mkdir $output_dir
 
-projections="$projection_dir/*.pkl"
-models="$model_dir/*.pkl $model_dir/*.h5"
+projections=$(ls $projection_dir/${dataset_name}_*.pkl 2> /dev/null)
+models=$(ls $model_dir/${dataset_name}_*.pkl $model_dir/${dataset_name}_*.h5 2> /dev/null)
 
 d=$dataset_name
 g=$grid_size

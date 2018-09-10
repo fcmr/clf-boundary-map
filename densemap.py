@@ -55,9 +55,9 @@ def create_densemap(dataset_name, output_dir, model_name, projection_name, is_bi
     proj_name = id_run.split('|')[0]
     X_low = projected_data[id_run]['X']
 
-    path = "%s/%s_%s_%s_%s.pdf" % (output_dir, dataset_name, clf_name, proj_name, str(is_binary))
-    path_leg = "%s/%s_%s_%s_%s_leg.pdf"  % (output_dir, dataset_name, clf_name, proj_name, str(is_binary))
-    title = "%s: %s (%s) binary=%s" % (dataset_name, clf_name, proj_name, str(is_binary))
+    path = "%s/%s_%s_%s_%s_%d_%d.pdf" % (output_dir, dataset_name, clf_name, proj_name, str(is_binary), grid_size, num_per_cell)
+    path_leg = "%s/%s_%s_%s_%s_%d_%d_leg.pdf"  % (output_dir, dataset_name, clf_name, proj_name, str(is_binary), grid_size, num_per_cell)
+    title = "%s: %s (%s) binary=%s (%d, %d)" % (dataset_name, clf_name, proj_name, str(is_binary), grid_size, num_per_cell)
     
     print('Plotting projection: ', clf_name, proj_name)
     PlotProjection(X_low, y_pred, path, title, path_leg, labels)
@@ -70,8 +70,8 @@ def create_densemap(dataset_name, output_dir, model_name, projection_name, is_bi
     print('Creating boundary map: ', clf_name, id_run)
     _, dmap = grid.BoundaryMap(X, N, clf)
 
-    fig_title = "{}x{} DenseMap ({} samples, {})".format(grid.grid_size, grid.grid_size, N, clf_name)
-    fig_name = "{}/DenseMap_{}x{}_N_{}_dense_map_{}_{}".format(output_dir, grid.grid_size, grid.grid_size, N, clf_name, proj_name)
+    fig_title = "{}: {}x{} DenseMap ({} samples, {})".format(dataset_name, grid.grid_size, grid.grid_size, N, clf_name)
+    fig_name = "{}/{}_DenseMap_{}x{}_N_{}_dense_map_{}_{}".format(output_dir, dataset_name, grid.grid_size, grid.grid_size, N, clf_name, proj_name)
 
     print('Plotting densemap: ', clf_name, proj_name)
     PlotDenseMap(dmap, fig_title, fig_name)

@@ -99,6 +99,16 @@ def save_model(model, model_name, dataset_name, output_dir, is_binary=True):
 
 def load_model(model_file_name):
     if model_file_name[-3:] == '.h5':
+        session_conf = tf.ConfigProto()
+        session_conf.intra_op_parallelism_threads = 1
+        session_conf.inter_op_parallelism_threads = 1
+        session_conf.gpu_options.allow_growth = True
+
+        K.clear_session()
+        
+        sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
+        K.set_session(sess)
+
         model = keras.models.load_model(model_file_name)
     else:
         model = joblib.load(model_file_name)
@@ -115,14 +125,6 @@ def run_classifiers(dataset_name, output_dir, is_binary):
     rn.seed(42)
 
     tf.set_random_seed(42)
-
-    session_conf = tf.ConfigProto()
-    session_conf.intra_op_parallelism_threads = 1
-    session_conf.inter_op_parallelism_threads = 1
-    session_conf.gpu_options.allow_growth = True
-
-    sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
-    K.set_session(sess)
     # end set seed
 
     models = [  LogisticRegression(),

@@ -110,7 +110,8 @@ def lamp2d(X, num_ctrl_pts=None, delta=10.0, ctrl_pts_idx=None):
         B = alpha_sqrt[:, np.newaxis]*y_hat
 
         # 4. compute the SVD decomposition UDV from (A^T)B
-        u, s, vh = np.linalg.svd(np.dot(A.T, B))
+        #u, s, vh = np.linalg.svd(np.dot(A.T, B))
+        u, s, vh = randomized_svd(np.dot(A.T, B), n_components=2)
         # 5. Make M = UV
 
         aux = np.zeros((X.shape[1], 2))

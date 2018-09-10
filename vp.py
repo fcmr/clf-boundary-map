@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import numpy as np
 from glob import glob
 import tempfile
@@ -135,7 +136,7 @@ class PLMP(VispipelineProjection):
     #    5. Dynamic Time Warping (DTW)
     #    6. Max Moving Euclidean
     #    7. Min Moving Euclidean
-    def __init__(self, command='vp-run',
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run',
                       fraction_delta=8.0,
                       n_iterations=100,
                       sample_type='random',
@@ -158,7 +159,7 @@ class PLMP(VispipelineProjection):
                                    'min_moving_euclidean']
         self.set_params(command, fraction_delta, n_iterations, sample_type, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run',
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run',
                    fraction_delta=8.0, 
                    n_iterations=100, 
                    sample_type='random',
@@ -216,7 +217,7 @@ class IDMAP(VispipelineProjection):
 #    5. Dynamic Time Warping (DTW)
 #    6. Max Moving Euclidean
 #    7. Min Moving Euclidean
-    def __init__(self, command='vp-run', 
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run', 
                  fraction_delta=8.0,
                  n_iterations=100,
                  init_type='fastmap',
@@ -235,7 +236,7 @@ class IDMAP(VispipelineProjection):
                                    'min_moving_euclidean']
         self.set_params(command, fraction_delta, n_iterations, init_type, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run', 
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run', 
                  fraction_delta=8.0,
                  n_iterations=100,
                  init_type='fastmap',
@@ -291,7 +292,7 @@ class LSP(VispipelineProjection):
 #    5. Dynamic Time Warping (DTW)
 #    6. Max Moving Euclidean
 #    7. Min Moving Euclidean
-    def __init__(self, command='vp-run', 
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run', 
                  fraction_delta=8.0,
                  n_iterations=100,
                  n_neighbors=8,
@@ -311,7 +312,7 @@ class LSP(VispipelineProjection):
                                    'min_moving_euclidean']
         self.set_params(command, fraction_delta, n_iterations, n_neighbors, control_point_type, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run', 
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run', 
                  fraction_delta=8.0,
                  n_iterations=100,
                  n_neighbors=8,
@@ -369,7 +370,7 @@ class PLSP(VispipelineProjection):
 #    5. Dynamic Time Warping (DTW)
 #    6. Max Moving Euclidean
 #    7. Min Moving Euclidean
-    def __init__(self, command='vp-run',
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run',
                  sample_type='clustering',
                  dissimilarity_type='euclidean',
                  verbose=False):
@@ -386,7 +387,7 @@ class PLSP(VispipelineProjection):
                            'min_moving_euclidean']
         self.set_params(command, sample_type, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run',
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run',
                    sample_type='clustering',
                    dissimilarity_type='euclidean',
                    verbose=False):
@@ -419,7 +420,7 @@ class LAMP(VispipelineProjection):
 #    2. CLUSTERING_MEDOID
 #    3. MAXMIN
 #    4. SPAM
-    def __init__(self, command='vp-run',
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run',
                  fraction_delta=8.0,
                  n_iterations=100,
                  sample_type='random',
@@ -433,7 +434,7 @@ class LAMP(VispipelineProjection):
                             'spam']
         self.set_params(command, fraction_delta, n_iterations, sample_type, verbose=False)
 
-    def set_params(self, command='vp-run',
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run',
                  fraction_delta=8.0,
                  n_iterations=100,
                  sample_type='random',
@@ -473,7 +474,7 @@ class Fastmap(VispipelineProjection):
     #     5. Dynamic Time Warping(DTW)
     #     6. Max Moving Euclidean
     #     7. Min Moving Euclidean
-    def __init__(self, command='vp-run',
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run',
                  dissimilarity_type='euclidean',
                  verbose=False):
         super(Fastmap, self).__init__(projection='fastmap', command=command, verbose=verbose)
@@ -488,7 +489,7 @@ class Fastmap(VispipelineProjection):
                                     'min_moving_euclidean']
         self.set_params(command, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run',
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run',
                    dissimilarity_type='euclidean',
                    verbose=False):
         self.command = command
@@ -513,7 +514,7 @@ class RapidSammon(VispipelineProjection):
     #     5. Dynamic Time Warping(DTW)
     #     6. Max Moving Euclidean
     #     7. Min Moving Euclidean
-    def __init__(self, command='vp-run',
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run',
                  dissimilarity_type='euclidean',
                  verbose=False):
         super(RapidSammon, self).__init__(projection='pekalska', command=command, verbose=verbose)
@@ -528,7 +529,7 @@ class RapidSammon(VispipelineProjection):
                                     'min_moving_euclidean']
         self.set_params(command, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run',
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run',
                    dissimilarity_type='euclidean',
                    verbose=False):
         self.command = command
@@ -560,7 +561,7 @@ class ProjectionByClustering(VispipelineProjection):
     #    6. Max Moving Euclidean
     #    7. Min Moving Euclidean
     #5. Cluster Factor(float, default: 4.5)
-    def __init__(self, command='vp-run', 
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run', 
                  fraction_delta=8.0,
                  n_iterations=50,
                  init_type='fastmap',
@@ -580,7 +581,7 @@ class ProjectionByClustering(VispipelineProjection):
                                    'min_moving_euclidean']
         self.set_params(command, fraction_delta, n_iterations, init_type, dissimilarity_type, cluster_factor, verbose)
 
-    def set_params(self, command='vp-run', 
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run', 
                  fraction_delta=8.0,
                  n_iterations=50,
                  init_type='fastmap',
@@ -637,7 +638,7 @@ class LandmarkIsomap(VispipelineProjection):
     #    5. Dynamic Time Warping (DTW)
     #    6. Max Moving Euclidean
     #    7. Min Moving Euclidean
-    def __init__(self, command='vp-run',
+    def __init__(self, command=os.getcwd() + '/vispipeline/vp-run',
                  n_neighbors=8,
                  dissimilarity_type='euclidean',
                  verbose=False):
@@ -653,7 +654,7 @@ class LandmarkIsomap(VispipelineProjection):
                                     'min_moving_euclidean']
         self.set_params(command, n_neighbors, dissimilarity_type, verbose)
 
-    def set_params(self, command='vp-run',
+    def set_params(self, command=os.getcwd() + '/vispipeline/vp-run',
                    n_neighbors=8,
                    dissimilarity_type='euclidean',
                    verbose=False):

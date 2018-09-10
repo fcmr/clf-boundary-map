@@ -15,7 +15,9 @@ import metrics
 import joblib
 
 all_projections = dict()
-projections_to_save = ['PCA', 'KernelPCASigmoid', 'KernelPCALinear', 'KernelPCAPoly', 'KernelPCARbf', 'UMAP']
+projections_to_save = ['PCA', 'KernelPCASigmoid',
+                       'KernelPCALinear', 'KernelPCAPoly', 'KernelPCARbf', 'UMAP']
+
 
 def run_projection(proj, X, y, id_run, dataset_name, output_dir):
     t0 = perf_counter()
@@ -28,7 +30,8 @@ def run_projection(proj, X, y, id_run, dataset_name, output_dir):
     #     clean_id_run = metrics.cleanup_id_run(id_run)
     #     joblib.dump(proj, os.path.join(output_dir, '%s_projection_model_%s.pkl' % (dataset_name, clean_id_run)))
 
-    return X_new, y #, metrics.eval_pq_metrics(X=X_new, y=y, elapsed_time=elapsed_time, id_run=id_run, dataset_name=dataset_name, output_dir=output_dir)
+    # , metrics.eval_pq_metrics(X=X_new, y=y, elapsed_time=elapsed_time, id_run=id_run, dataset_name=dataset_name, output_dir=output_dir)
+    return X_new, y
 
 
 all_projections['PCA'] = (decomposition.PCA(),
@@ -120,19 +123,19 @@ all_projections['LTSA'] = (manifold.LocallyLinearEmbedding(),
                             'random_state': [42]})
 
 all_projections['MetricMDS'] = (manifold.MDS(),
-                          {'n_components': [2],
-                           'n_init': [4],
-                           'metric': [True],
-                           'max_iter': [300],
-                           'random_state': [42]})
+                                {'n_components': [2],
+                                 'n_init': [4],
+                                 'metric': [True],
+                                 'max_iter': [300],
+                                 'random_state': [42]})
 
 
 all_projections['NonMetricMDS'] = (manifold.MDS(),
-                          {'n_components': [2],
-                           'n_init': [4],
-                           'metric': [False],
-                           'max_iter': [300],
-                           'random_state': [42]})
+                                   {'n_components': [2],
+                                    'n_init': [4],
+                                    'metric': [False],
+                                    'max_iter': [300],
+                                    'random_state': [42]})
 
 all_projections['LaplacianEigenmaps'] = (manifold.SpectralEmbedding(),
                                          {'n_components': [2],
@@ -140,7 +143,7 @@ all_projections['LaplacianEigenmaps'] = (manifold.SpectralEmbedding(),
                                           'gamma': [None],
                                           'random_state': [42]})
 
-#FIXME: only supports n_components < n_classes -1 - not suitable for binary problems
+# FIXME: only supports n_components < n_classes -1 - not suitable for binary problems
 # all_projections['LinearDiscriminantAnalysis'] = (discriminant_analysis.LinearDiscriminantAnalysis(),
 #                                                  {'n_components': [2]})
 
@@ -174,8 +177,8 @@ all_projections['UMAP'] = (umap.UMAP(),
                             'metric': ['euclidean']})
 
 all_projections['LAMP'] = (vp.LAMP(),
-                           {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                            'verbose': [False],
+                           # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                           {'verbose': [False],
                             'fraction_delta': [8.0],
                             'n_iterations': [100],
                             'sample_type': ['random']})
@@ -190,52 +193,53 @@ all_projections['LAMP'] = (vp.LAMP(),
 #                            'dissimilarity_type': ['euclidean']})
 
 all_projections['PLMP'] = (vp.PLMP(),
-                           {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                            'verbose': [False],
+                           # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                           {'verbose': [False],
                             'fraction_delta': [8.0],
                             'n_iterations': [100],
                             'sample_type': ['random'],
                             'dissimilarity_type': ['euclidean']})
 
 all_projections['PLSP'] = (vp.PLSP(),
-                           {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                            'dissimilarity_type': ['euclidean'],
+                           # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                           {'dissimilarity_type': ['euclidean'],
                             'verbose': [False],
                             'sample_type': ['clustering']})
 
 all_projections['IDMAP'] = (vp.IDMAP(),
-                            {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                             'verbose': [False],
+                            # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                            {'verbose': [False],
                              'fraction_delta': [8.0],
                              'n_iterations': [100],
                              'init_type': ['random'],
                              'dissimilarity_type': ['euclidean']})
 
 all_projections['Fastmap'] = (vp.Fastmap(),
-                              {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                               'verbose': [False],
+                              # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                              {'verbose': [False],
                                'dissimilarity_type': ['euclidean']})
 
 all_projections['RapidSammon'] = (vp.RapidSammon(),
-                                  {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                                   'verbose': [False],
+                                  #  {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                                  {'verbose': [False],
                                    'dissimilarity_type': ['euclidean']})
 
 all_projections['LandmarkIsomap'] = (vp.LandmarkIsomap(),
-                                     {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                                         'verbose': [False],
-                                         'n_neighbors': [8],
+                                     # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                                     {'verbose': [False],
+                                      'n_neighbors': [8],
                                          'dissimilarity_type': ['euclidean']})
 
 all_projections['ProjectionByClustering'] = (vp.ProjectionByClustering(),
-                                             {'command': [os.getcwd() + '/vispipeline/vp-run'],
-                                              'verbose': [False],
+                                             # {'command': [os.getcwd() + '/vispipeline/vp-run'],
+                                             {'verbose': [False],
                                               'fraction_delta': [8.0],
                                               'n_iterations': [100],
                                               'init_type': ['random'],
                                               'dissimilarity_type': ['euclidean'],
                                               'cluster_factor': [4.5]})
 
+# # # TODO: not working, eigendecomposition errors
 # all_projections['DiffusionMaps'] = (sgtk.DiffusionMaps(),
 #                                     {'n_components': [2],
 #                                      't': [5],
@@ -263,9 +267,8 @@ all_projections['ProjectionByClustering'] = (vp.ProjectionByClustering(),
 #                                                       {'n_components': [2],
 #                                                        'n_neighbors': [7]})
 
-# # TODO: not working, getting stuck
-# # all_projections['ManifoldSculpting'] = (sgtk.ManifoldSculpting(),
-# #                                         {'n_components': [2],
-# #                                          'n_neighbors': [3, 5, 10],
-# #                                          'squishing_rate': [0.1, 0.5, 0.8, 0.99],
-# #                                          'max_iter': [20]})
+# # # TODO: not working, getting stuck
+# all_projections['ManifoldSculpting'] = (sgtk.ManifoldSculpting(),
+#                                         {'n_components': [2],
+#                                          'n_neighbors': [5],
+#                                          'max_iter': [20]})
