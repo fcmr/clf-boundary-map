@@ -12,8 +12,6 @@ from sklearn.model_selection import ParameterGrid
 
 import mtsne
 import projections
-import sgtk
-import vp
 from metrics import *
 
 

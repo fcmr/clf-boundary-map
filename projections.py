@@ -9,7 +9,7 @@ from sklearn import (decomposition, discriminant_analysis, manifold,
                      random_projection)
 from time import perf_counter
 import mtsne
-import sgtk
+#import sgtk
 import vp
 import metrics
 import joblib

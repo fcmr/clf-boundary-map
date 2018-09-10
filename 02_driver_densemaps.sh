@@ -3,10 +3,10 @@ model_dir=$2
 dataset_name=$3
 grid_size=$4
 num_per_cell=$5
-binary=$6
+output_dir=$6
+binary=$7
 
 test_id=$(date +"%Y%m%d_%H%M%S")
-output_dir="densemaps_$test_id"
 
 echo "Starting test id $test_id"
 
