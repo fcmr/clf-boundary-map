@@ -26,7 +26,7 @@ do
 		echo "$d - $p (python run_densemaps.py -d $d -o $output_dir -p $p -m $m -g $g -n $n $binary)"
 		python run_densemaps.py -d $d -o $output_dir -p $p -m $m -g $g -n $n $binary &
 
-		while [ $(jobs | grep Running | wc -l ) -gt 7 ]
+		while [ $(jobs | grep Running | wc -l ) -gt 11 ]
 		do
 			echo "--> $(jobs | grep Running | wc -l ) jobs running"
 			sleep 10

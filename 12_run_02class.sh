@@ -1,9 +1,9 @@
 #!/bin/bash
 
-binary=$1
+binary=-b
 
 test_id=$(date +"%Y%m%d_%H%M%S")
-output_dir="densemaps_$test_id"
+output_dir="densemaps_02class_$test_id"
 
 [ ! -d $output_dir ] && mkdir $output_dir
 
@@ -11,6 +11,6 @@ declare -a servers=(lince03 lince09 lince13 lince21 lince25 lince27 lince29 linc
 
 for s in ${servers[*]}
 do
-    nohup ssh $s "cd ~/src/clf-boundary-map && nohup ./11_run_jobs.sh $output_dir $binary > ${s}_nohup.log 2>&1 &" &
+    nohup ssh $s "cd ~/src/clf-boundary-map && nohup ./11_run_jobs.sh $output_dir $binary > $output_dir/${s}_nohup.log 2>&1 &" &
 done
 
