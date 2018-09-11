@@ -12,8 +12,6 @@ test_id=$(date +"%Y%m%d_%H%M%S")
 
 echo "Starting test id $test_id"
 
-[ ! -d $output_dir ] && mkdir $output_dir
-
 projections=$(ls $projection_dir/${dataset_name}_*.pkl 2> /dev/null)
 models=$(ls $model_dir/${dataset_name}_*.pkl $model_dir/${dataset_name}_*.h5 2> /dev/null)
 
