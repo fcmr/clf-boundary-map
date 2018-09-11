@@ -1,3 +1,5 @@
+#!/bin/bash
+
 projection_dir=$1
 model_dir=$2
 dataset_name=$3

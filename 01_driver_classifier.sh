@@ -1,3 +1,5 @@
+#!/bin/bash
+
 binary=$1
 
 test_id=$(date +"%Y%m%d_%H%M%S")
