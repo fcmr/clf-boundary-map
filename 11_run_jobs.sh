@@ -16,13 +16,11 @@ test_id=$(date +"%Y%m%d_%H%M%S")
 for dataset_name in $datasets
 do
     #for grid_size in 100 300 400
-    for grid_size in 10 20
+    for grid_size in 10
     do
-        for num_per_cell in 1 2
+        for num_per_cell in 1
         do
-            #output_dir="${server}_${dataset_name}_${model_dir}_${grid_size}_${num_per_cell}${binary}"
-            echo "./02_driver_densemaps.sh $projection_dir $model_dir $dataset_name $grid_size $num_per_cell $output_dir $binary"
-            ./02_driver_densemaps.sh $projection_dir $model_dir $dataset_name $grid_size $num_per_cell $output_dir $binary > ${output_dir}/${server}.log 2>&1
+            ./02_driver_densemaps.sh $projection_dir $model_dir $dataset_name $grid_size $num_per_cell $output_dir $binary >> ${output_dir}/${server}.log 2>&1
         done
     done
 done

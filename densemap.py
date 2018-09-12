@@ -44,7 +44,7 @@ def create_densemap(dataset_name, output_dir, model_name, projection_name, is_bi
     labels = [str(i) for i in range(len(np.unique(y_pred)))]
 
     clf_name = os.path.basename(model_name)
-    clf_name = clf_name.replace(dataset_name, '').replace('_model_', '').replace('_True.pkl', '').replace('_False.pkl', '')
+    clf_name = clf_name.replace(dataset_name, '').replace('_model_', '').replace('_True.pkl', '').replace('_False.pkl', '').replace('_True.h5', '').replace('_False.h5', '')
 
     projected_data = joblib.load(projection_name)
 
@@ -71,7 +71,7 @@ def create_densemap(dataset_name, output_dir, model_name, projection_name, is_bi
     _, dmap = grid.BoundaryMap(X, N, clf)
 
     fig_title = "{}: {}x{} DenseMap ({} samples, {})".format(dataset_name, grid.grid_size, grid.grid_size, N, clf_name)
-    fig_name = "{}/{}_DenseMap_{}x{}_N_{}_dense_map_{}_{}".format(output_dir, dataset_name, grid.grid_size, grid.grid_size, N, clf_name, proj_name)
+    fig_name = "{}/{}_DenseMap_{}x{}_N_{}_{}_{}".format(output_dir, dataset_name, grid.grid_size, grid.grid_size, N, proj_name, clf_name)
 
     print('Plotting densemap: ', clf_name, proj_name)
     PlotDenseMap(dmap, fig_title, fig_name)
