@@ -52,7 +52,8 @@ def create_densemap(dataset_name, output_dir, model_name, projection_name, is_bi
     id_run = list(projected_data.keys())[0]
 
     print(clf_name, id_run)
-    proj_name = id_run.split('|')[0]
+    #proj_name = id_run.split('|')[0]
+    proj_name = os.path.basename(projection_name).split('_')[1]
     X_low = projected_data[id_run]['X']
 
     path = "%s/%s_%s_%s_%s_%d_%d.pdf" % (output_dir, dataset_name, clf_name, proj_name, str(is_binary), grid_size, num_per_cell)
@@ -76,6 +77,9 @@ def create_densemap(dataset_name, output_dir, model_name, projection_name, is_bi
     print('Plotting densemap: ', clf_name, proj_name)
     PlotDenseMap(dmap, fig_title, fig_name)
 
+    dmap_name = "{}/{}_DenseMap_{}x{}_N_{}_{}_{}.npy".format(output_dir, dataset_name, grid.grid_size, grid.grid_size, N, proj_name, clf_name)
+    print('Saving densemap: ', dmap_name)
+    np.save(dmap_name, dmap)
 
     # # Ideal path:
     # # 1 - Load dataset, projection and a trained classifier

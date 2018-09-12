@@ -9,6 +9,7 @@ import joblib
 import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import ParameterGrid
+from sklearn.preprocessing import MinMaxScaler
 
 import mtsne
 import projections
@@ -72,6 +73,9 @@ def run_eval(dataset_name, projection_name, output_dir, is_binary):
         try:
 #            X_new, y_new, result = projections.run_projection(proj, X, y, id_run, dataset_name, output_dir)
             X_new, y_new = projections.run_projection(proj, X, y, id_run, dataset_name, output_dir)
+
+            scaler = MinMaxScaler()
+            X_new = scaler.fit_transform(X_new)
 
 #            pq_results[id_run] = result
             projected_data[id_run] = dict()

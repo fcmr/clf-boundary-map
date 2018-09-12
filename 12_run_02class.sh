@@ -11,6 +11,6 @@ declare -a servers=(lince03 lince09 lince13 lince21 lince25 lince27 lince29 linc
 
 for s in ${servers[*]}
 do
-    nohup ssh $s "cd ~/src/clf-boundary-map && nohup ./11_run_jobs.sh $output_dir $binary > $output_dir/${s}_nohup.log 2>&1 &" &
+    nohup ssh $s "cd ~/clf-boundary-map && nohup ./11_run_jobs.sh $output_dir $binary > $output_dir/${s}_nohup.log 2>&1 &" &
 done
 
