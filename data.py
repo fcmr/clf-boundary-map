@@ -111,4 +111,48 @@ def LoadCifar10(data_dir):
 
     return train_data, train_labels, test_data, test_labels
 
+def download_fashionmnist(path):
+    URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/"
 
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    files = ['train-images-idx3-ubyte.gz', 'train-labels-idx1-ubyte.gz', 
+             't10k-images-idx3-ubyte.gz', 't10k-labels-idx1-ubyte.gz']
+
+    for filename in files:
+        filepath = os.path.join(path, filename)
+        if os.path.exists(filepath):
+            continue
+        filepath, _ = urllib.request.urlretrieve(URL + filename, filepath)
+
+
+def LoadFashionMNIST(dataset="train", path="data/"):
+    download_fashionmnist(path)
+
+    
+    if dataset is 'train':
+        fname_img = os.path.join(path, 'train-images-idx3-ubyte.gz')
+        fname_lbl = os.path.join(path, 'train-labels-idx1-ubyte.gz')
+    elif dataset is 'test':
+        fname_img = os.path.join(path, 't10k-images-idx3-ubyte.gz')
+        fname_lbl = os.path.join(path, 't10k-labels-idx1-ubyte.gz')
+    else:
+        sys.exit('Error: invalid dataset')
+
+
+    #with open(fname_lbl, 'rb') as flbl:
+    with gzip.open(fname_lbl, 'rb') as flbl:
+        magic, num = struct.unpack(">II", flbl.read(8))
+        y = np.frombuffer(flbl.read(), dtype=np.int8)
+
+    #with open(fname_img, 'rb') as fimg:
+    with gzip.open(fname_img, 'rb') as fimg:
+        magic, num, rows, cols = struct.unpack(">IIII", fimg.read(16))
+        X = np.frombuffer(fimg.read(), dtype=np.uint8)
+        X = X.reshape(len(y), rows, cols)
+
+    X = X.astype('float32')
+    X /= 255.0
+
+    return X, y

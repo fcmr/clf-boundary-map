@@ -5,7 +5,7 @@ from utils import *
 import lamp
 
 import matplotlib
-matplotlib.use('agg')
+#matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import hsv_to_rgb
 from PIL import Image
