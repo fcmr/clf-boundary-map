@@ -2,6 +2,7 @@ import argparse
 import os
 import random as rn
 
+from glob import glob
 import joblib
 import keras
 from keras.callbacks import EarlyStopping
@@ -85,6 +86,19 @@ def train_model(model, dataset_name, is_binary=True):
         model.fit(X_train, y_train)
         return model, model.score(X_test, y_test)
 
+def score_model(model, dataset_name, is_binary=True):
+    if model.__class__.__name__ == 'Sequential':
+        X, y = load_dataset(dataset_name, 'full', is_binary, img=True)
+        y = np_utils.to_categorical(y)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, stratify=y, random_state=42)
+
+        return model.evaluate(X_test, y_test, verbose=False)[1]
+    else:
+        X, y = load_dataset(dataset_name, 'full', is_binary, img=False)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, stratify=y, random_state=42)
+
+        return model.score(X_test, y_test)
+
 
 def save_model(model, model_name, dataset_name, output_dir, is_binary=True):
     model_file_name = os.path.join(output_dir, '%s_model_%s_%s' % (dataset_name, model_name, str(is_binary)))
@@ -137,3 +151,20 @@ def run_classifiers(dataset_name, output_dir, is_binary):
         print('%s - %s: %.4f' % (dataset_name, trained_model.__class__.__name__, acc))
         save_model(trained_model, trained_model.__class__.__name__, dataset_name, output_dir, is_binary)
 
+def score_classifiers(dataset_name, classifier_dir, is_binary):
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+    # begin set seed
+    os.environ['PYTHONHASHSEED'] = '0'
+    np.random.seed(42)
+    rn.seed(42)
+
+    tf.set_random_seed(42)
+    # end set seed
+
+    model_files = glob(classifier_dir + '/%s_model_*_%s.*' % (dataset_name, str(is_binary)))
+
+    for model_file in model_files:
+        model = load_model(model_file)
+        acc = score_model(model, dataset_name, is_binary)
+        print('%s - %s: %.4f' % (dataset_name, model_file, acc))
