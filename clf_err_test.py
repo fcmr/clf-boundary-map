@@ -29,6 +29,8 @@ def PlotProjectionErr(grid, X, y_pred, y_true, path, title, leg_path="", labels=
     colors = [COLORS[i] for i in y_pred]
     colors = np.array(colors)
 
+    edge_colors = [COLORS[i] for i in y_true]
+
     #colors[y_pred != y_true] = np.array([0.0, 0.0, 0.0, 0.8])
 
     plt.axes().set_aspect('equal')
@@ -59,19 +61,22 @@ def PlotProjectionErr(grid, X, y_pred, y_true, path, title, leg_path="", labels=
 
 def PlotDenseMapErr(grid, dense_map, proj_in, y_true, y_pred, title, filename):
     proj = np.copy(proj_in)
-    COLORS = np.array([[0.09, 0.414, 0.9, 0.25],
-                       [0.9, 0.333, 0.09, 0.25],
-                       [0.09, 0.9, 0.171, 0.25],
-                       [0.9, 0.09, 0.819, 0.25],
-                       [0.495, 0.09, 0.9, 0.25],
-                       [0.495, 0.9, 0.09, 0.25],
-                       [0.09, 0.657, 0.9, 0.25],
-                       [0.9, 0.09, 0.333, 0.25],
-                       [0.9, 0.819, 0.09, 0.25],
-                       [0.09, 0.9, 0.657, 0.25]])
+    COLORS = np.array([[0.09, 0.414, 0.9],
+                       [0.9, 0.333, 0.09],
+                       [0.09, 0.9, 0.171],
+                       [0.9, 0.09, 0.819],
+                       [0.495, 0.09, 0.9],
+                       [0.495, 0.9, 0.09],
+                       [0.09, 0.657, 0.9],
+                       [0.9, 0.09, 0.333],
+                       [0.9, 0.819, 0.09],
+                       [0.09, 0.9, 0.657]])
 
     colors = [COLORS[i] for i in y_pred]
     colors = np.array(colors)
+
+    edge_colors = [COLORS[i] for i in y_true]
+    edge_colors = np.array(edge_colors)
 
 
     tmp_dense = np.flip(dense_map, axis=0)
@@ -100,8 +105,9 @@ def PlotDenseMapErr(grid, dense_map, proj_in, y_true, y_pred, title, filename):
     #    y += cell_len*0.5
     #    plt.plot([50*x_min, 50*x_max], [50*(1.0 - y), 50*(1.0 - y)], color='k')
 
-    #plt.scatter(50*proj[y_pred == y_true][:, 0], 50*(1.0 - proj[y_pred == y_true][:, 1]), color=colors[y_pred == y_true], s=4.0)
-    plt.scatter(50*proj[y_pred != y_true][:, 0], 50*(1.0 - proj[y_pred != y_true][:, 1]), color=[1.0, 1.0, 1.0, 0.7], s=10.0)
+    plt.scatter(50*proj[y_pred == y_true][:, 0], 50*(1.0 - proj[y_pred == y_true][:, 1]), color=colors[y_pred == y_true], s=10.0)
+    #plt.scatter(50*proj[y_pred != y_true][:, 0], 50*(1.0 - proj[y_pred != y_true][:, 1]), color=[1.0, 1.0, 1.0, 0.7], s=10.0)
+    plt.scatter(50*proj[y_pred != y_true][:, 0], 50*(1.0 - proj[y_pred != y_true][:, 1]), color=colors[y_pred != y_true], s=10.0, edgecolor=edge_colors[y_pred != y_true])
 
     plt.title(title)
 

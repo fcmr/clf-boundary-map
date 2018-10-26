@@ -3,7 +3,7 @@ from sklearn import preprocessing
 import os
 import struct
 import sys
-import urllib
+import urllib.request
 import gzip
 
 def LoadZeroOneData():

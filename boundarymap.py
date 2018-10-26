@@ -5,7 +5,7 @@ from utils import *
 import lamp
 
 import matplotlib
-#matplotlib.use('agg')
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import hsv_to_rgb
 from PIL import Image
@@ -76,6 +76,16 @@ class CLF:
         with open(arch_path, 'r') as f:
             self.clf = model_from_json(f.read())
         self.clf.load_weights(weight_path)
+
+    def LoadKerasModel(self, model_path, name="", shape=None):
+        from keras.models import load_model
+        import keras
+        self.clf_type = 1
+
+        self.name = name
+        self.shape = shape
+
+        self.clf = load_model(model_path)
 
     def Predict(self, X):
         if self.shape is not None:
@@ -212,7 +222,7 @@ class Grid:
                 dmap[row, col] = np.array([hue, s, v])
         return smap, dmap
 
-def PlotDenseMap(dense_map, title, filename):
+def PlotDenseMap(dense_map, title, filename, format='pdf'):
     tmp_dense = np.flip(dense_map, axis=0)
     tmp_dense = TransferFunc(tmp_dense, 0.7)
     rgb_img = hsv_to_rgb(tmp_dense)
@@ -222,10 +232,7 @@ def PlotDenseMap(dense_map, title, filename):
 
     plt.imshow(rgb_img, interpolation='none')
     plt.title(title)
-    plt.savefig(filename + ".pdf", format='pdf')
-    plt.clf()
-    #Image.fromarray((rgb_img*255).astype(np.uint8)).save(filename + "_arr.png")
-    #plt.imsave(filename + "_plt.svg", (rgb_img*255).astype(np.uint8),format='svg')
+    plt.savefig(filename + "." + format, format=format)
     plt.clf()
     
 def PlotLegend(path, colors, labels):
@@ -241,7 +248,7 @@ def PlotLegend(path, colors, labels):
     figlegend.savefig(path, format='pdf')
     plt.clf()
 
-def PlotProjection(X, y_pred, path, title, leg_path="", labels=[]):
+def PlotProjection(proj, y_pred, path, title, leg_path="", labels=[]):
     # COLORS are the rgb counterparts of Grid.CMAP_SYN
     COLORS = np.array([[0.09, 0.414, 0.9, 0.5],
                        [0.9, 0.333, 0.09, 0.5],
@@ -257,7 +264,7 @@ def PlotProjection(X, y_pred, path, title, leg_path="", labels=[]):
     colors = [COLORS[i] for i in y_pred]
 
     plt.axes().set_aspect('equal')
-    plt.scatter(X[:, 0], X[:, 1], color=colors, s=10.0)
+    plt.scatter(proj[:, 0], proj[:, 1], color=colors, s=10.0)
     plt.title(title)
     plt.xticks([])
     plt.yticks([])
@@ -266,3 +273,48 @@ def PlotProjection(X, y_pred, path, title, leg_path="", labels=[]):
 
     if leg_path != "":
         PlotLegend(leg_path, COLORS[:len(labels)], labels)
+
+
+def PlotProjectionErr(grid, proj, y_pred, y_true, path, title, leg_path="", labels=[]):
+    # COLORS are the rgb counterparts of Grid.CMAP_SYN
+    COLORS = np.array([[0.09, 0.414, 0.9, 0.25],
+                       [0.9, 0.333, 0.09, 0.25],
+                       [0.09, 0.9, 0.171, 0.25],
+                       [0.9, 0.09, 0.819, 0.25],
+                       [0.495, 0.09, 0.9, 0.25],
+                       [0.495, 0.9, 0.09, 0.25],
+                       [0.09, 0.657, 0.9, 0.25],
+                       [0.9, 0.09, 0.333, 0.25],
+                       [0.9, 0.819, 0.09, 0.25],
+                       [0.09, 0.9, 0.657, 0.25]])
+
+    colors = [COLORS[i] for i in y_pred]
+    colors = np.array(colors)
+
+    #edge_colors = [COLORS[i] for i in y_true]
+
+    plt.axes().set_aspect('equal')
+    x_min, x_max = np.min(grid.x_intrvls), np.max(grid.x_intrvls)
+    y_min, y_max = np.min(grid.y_intrvls), np.max(grid.y_intrvls)
+    print(x_min, x_max)
+    print(y_min, y_max)
+    for x in grid.x_intrvls:
+        plt.plot([x,  x], [y_min, y_max], color='k')
+    for y in grid.y_intrvls:
+        plt.plot([x_min,  x_max], [y, y], color='k')
+
+    plt.scatter(proj[y_pred == y_true][:, 0], proj[y_pred == y_true][:, 1], color=colors[y_pred == y_true], s=10.0)
+    plt.scatter(proj[y_pred != y_true][:, 0], proj[y_pred != y_true][:, 1], color=[0.0, 0.0, 0.0, 0.8], s=10.0, marker='*')
+    plt.title(title)
+    plt.xticks([])
+    plt.yticks([])
+
+    plt.show()
+    plt.clf()
+
+    if leg_path != "":
+        legend_colors = np.zeros((len(labels) + 1, COLORS.shape[1]))
+        legend_colors[:len(labels)] = COLORS[:len(labels)]
+        legend_colors[len(labels)] = np.array([0.0, 0.0, 0.0, 0.8])
+        PlotLegend(leg_path, COLORS[:len(labels)], labels)
+

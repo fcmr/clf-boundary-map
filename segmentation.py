@@ -78,5 +78,8 @@ def main():
     fig_name = "data/segmentation/DenseMap_{}x{}_N_{}_dense_map_{}".format(grid_knn5.grid_size, grid_knn5.grid_size, N, clf_knn5.name)
     PlotDenseMap(dmap, fig_title, fig_name)
 
+    
+
+
 if __name__ == "__main__":
     main()
